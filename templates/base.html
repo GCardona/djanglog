@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+{% include "head.html" %}
+<body>
+    <div id="container">
+        <div class="content-wrapper">
+            <header id="main-header" class="center-content">
+                <h1>Djanglog</h1>
+                <h2>A <a href="http://djangoproject.com">Django</a> + <a href="http://appengine.google.com">AppEngine</a> implementation of a very simple blog.</h2>
+            </header>
+        </div>
+        {% block content %}
+        {% endblock %}
+        <div class="content-wrapper border">
+            <footer id="main-footer" class="center-content">
+            <p>Created with academic purposes by <em>Gerard Cardona</em>.</p>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>
