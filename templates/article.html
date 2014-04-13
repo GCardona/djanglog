@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="content-wrapper border">
+    <article id="{{ article.key.id }}" class="center-content">
+    <h1>{{ article.title }}</h1>
+        <p>
+            {{ article.body }}
+        </p>
+        <p class="article-footer">
+        by: <b class="author">{{ article.author }}</b> ({{ article.publish_date }})
+        </p>
+    </article>
+
+{% endblock %}

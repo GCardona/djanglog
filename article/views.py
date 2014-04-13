@@ -7,9 +7,17 @@ from django.template import Context
 # Create your views here.
 
 
-def home(request):
+def article_all(request):
     t = get_template('list.html')
     articles = Article.all()
     html = t.render(Context({'articles': articles}))
+
+    return HttpResponse(html)
+
+
+def article_detail(request, article_id):
+    t = get_template('article.html')
+    article = Article.get_by_id(int(article_id))
+    html = t.render(Context({'article': article}))
 
     return HttpResponse(html)
