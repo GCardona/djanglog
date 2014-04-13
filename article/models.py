@@ -8,7 +8,7 @@ class Article(db.Model):
 
     author = db.StringProperty()
     title = db.StringProperty()
-    body = db.StringProperty(multiline=True)
+    body = db.TextProperty(multiline=True)
     publish_date = db.DateTimeProperty(auto_now_add=True)
 
     def __unicode__(self):
