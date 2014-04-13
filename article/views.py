@@ -11,8 +11,12 @@ from django.shortcuts import render_to_response
 
 
 def article_all(request):
+    # Get all articles.
     articles = Article.all()
+    # We order all articles from newer to older.
+    articles.order('-publish_date')
     c = {'articles': articles}
+    # Required for the POST method form.
     c.update(csrf(request))
 
     return render_to_response("list.html", c)
