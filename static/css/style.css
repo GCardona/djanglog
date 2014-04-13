@@ -31,3 +31,11 @@ a, b, em { color: #34517C; }
 .article-footer { font-style: italic; }
 
 #main-footer { padding-top: 20px; font-style: italic; }
+
+.hidden { display: none; }
+label { width: 100px; float: left; }
+
+textarea#new-log {
+    width: 300px;
+    height: 200px;
+}
