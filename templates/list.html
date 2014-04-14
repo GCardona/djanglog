@@ -3,6 +3,7 @@
 {% block content %}
 
 {% for article in articles %}
+
 <div class="content-wrapper {% if forloop.counter|divisibleby:2 %}even{% else %}odd{% endif %} border">
     <article id="{{ article.key.id }}" class="center-content">
     <h1><a href="/article/{{ article.key.id }}">{{ article.title }}</a></h1>
@@ -14,13 +15,20 @@
         </p>
     </article>
 </div>
+
 {% endfor %}
+
+{% if username %}
 
 <div class="content-wrapper border">
     <div class="center-content">
     <button id="show-new">New log</button>
+
     {% include "new.html" %}
+
     </div>
 </div>
-{% endblock %}
 
+{% endif %}
+
+{% endblock %}

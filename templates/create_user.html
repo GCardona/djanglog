@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    
+<div class="content-wrapper border">
+    <form id="login" class="center-content" method="POST" action="/create_user/">{% csrf_token %}
+        <label for="username">user name:</label>
+        <input type="text" name="username"/><br/>
+        <label for="password">password:</label>
+        <input type="password" name="password"/>
+        <input type="submit" value="Go!"/>
+    </form>
+</div>
+
+{% endblock %}

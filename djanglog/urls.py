@@ -13,4 +13,6 @@ urlpatterns = patterns('',
     url(r'^article/all/$', 'article.views.article_all'),
     url(r'^article/(?P<article_id>\d+)/$', 'article.views.article_detail'),
     url(r'^article/new/$', 'article.views.article_new'),
+    url(r'^need_login/$', 'djanglog.views.need_login'),
 )
+
