@@ -2,6 +2,7 @@
     font-family: sans-serif;
     padding: 0px;
     margin: 0px;
+    list-style: none;
 }
 
 .content-wrapper {
@@ -19,6 +20,13 @@
 
 article { padding-top: 15px; padding-bottom: 10px; }
 article h1 { padding-bottom: 10px; color: #34517C; }
+article li {
+    display: inline;
+    margin-right: 5px;
+    font-size: 12px;
+    font-weight: bold;
+}
+article li a { color: black; }
 
 #main-header {
     padding: 20px;

@@ -13,6 +13,16 @@
         <p class="article-footer">
         by: <em class="author">{{ article.author }}</em> ({{ article.publish_date }})
         </p>
+
+        {% if username == article.author %}
+
+        <ul>
+            <li><a href="/edit/{{ article.key.id }}">edit</a></li>
+            <li><a href="/delete/{{ article.key.id }}">delete</a></li>
+        </ul>
+
+        {% endif %}
+
     </article>
 </div>
 
