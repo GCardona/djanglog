@@ -8,7 +8,6 @@ from django.core.context_processors import csrf
 from django.shortcuts import render_to_response
 from google.appengine.api import users
 
-# Create your views here.
 
 def _user_manage(c):
     user = users.get_current_user()
@@ -18,14 +17,15 @@ def _user_manage(c):
     else:
         c['loginurl'] = users.create_login_url()
 
+
 def _require_login(wrapped_view):
 
-    def wrap(request):
+    def wrap(request, *args, **kargs):
         user = users.get_current_user()
         if user is None:
             return HttpResponseRedirect('/need_login/')
         else:
-            return wrapped_view(request)
+            return wrapped_view(request, *args, **kargs)
 
     return wrap
 
@@ -42,6 +42,7 @@ def article_all(request):
 
     # Required for the POST method form.
     c.update(csrf(request))
+    c['form'] = {'action': '/article/new/'}
 
     return render_to_response("list.html", c)
 
@@ -69,4 +70,33 @@ def article_new(request):
     article.author = users.get_current_user().email()
     article.put()
 
+    return HttpResponseRedirect('/article/all/')
+
+
+@_require_login
+def article_edit(request, article_id):
+
+    if request.method == 'GET':
+        c = {}
+        c.update(csrf(request))
+        _user_manage(c)
+        post_url = '/article/edit/' + article_id + '/'
+        c['form'] = {'action': post_url}
+        article = Article.get_by_id(int(article_id))
+        c['article'] = article
+        return render_to_response('edit_article.html', c)
+
+    elif request.method == 'POST':
+        article = Article.get_by_id(int(article_id))
+        article.title = request.POST.get('title', 'untitled')
+        article.body = request.POST.get('new_content', 'no content')
+        article.put()
+        return HttpResponseRedirect('/article/' + article_id + '/')
+
+
+@_require_login
+def article_delete(request, article_id):
+
+    article = Article.get_by_id(int(article_id))
+    article.delete()
     return HttpResponseRedirect('/article/all/')

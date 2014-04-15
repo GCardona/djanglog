@@ -1,0 +1,7 @@
+<form id="newlog-form" method="POST" action="{{ form.action }}">{% csrf_token %}
+    <label for="title">title: </label>
+    <input type="text" name="title" id="new-title" value="{% if article %}{{ article.title }}{% endif %}"/><br>
+    <label for="new-log">content: </label>
+    <textarea name="new_content" id="new-log">{% if article.body %}{{ article.body }}{% endif %}</textarea><br>
+    <input type="submit" value="DONE!"/>
+</form>
