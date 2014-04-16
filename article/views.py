@@ -10,6 +10,8 @@ from google.appengine.api import users
 
 
 def _user_manage(c):
+    """Set the user information to the context c."""
+
     user = users.get_current_user()
     if user is not None:
         c['username'] = user.email()
@@ -19,6 +21,7 @@ def _user_manage(c):
 
 
 def _require_login(wrapped_view):
+    """Decorator function to request login if needed."""
 
     def wrap(request, *args, **kargs):
         user = users.get_current_user()
@@ -31,6 +34,8 @@ def _require_login(wrapped_view):
 
 
 def article_all(request):
+    """Shows all articles"""
+
     # Get all articles.
     articles = Article.all()
     # We order all articles from newer to older.
@@ -48,6 +53,8 @@ def article_all(request):
 
 
 def article_detail(request, article_id):
+    """Shows one article."""
+
     # Get the article.
     article = Article.get_by_id(int(article_id))
 
@@ -63,10 +70,12 @@ def article_detail(request, article_id):
 
 @_require_login
 def article_new(request):
+    """Create new article, received by post."""
+
+    # Create the article and save it.
     article = Article()
-    article.title = request.POST['title']
-    article.body = request.POST['new_content']
-    # To be refactored once users are enabled. (Should be current user)
+    article.title = request.POST.get('title', 'untitled')
+    article.body = request.POST.get('new_content', 'no content')
     article.author = users.get_current_user().email()
     article.put()
 
@@ -75,28 +84,45 @@ def article_new(request):
 
 @_require_login
 def article_edit(request, article_id):
+    """If the user has rights, he will be able to edit and save.
+    Otherwise, he will be redirected to need_login page."""
 
-    if request.method == 'GET':
-        c = {}
-        c.update(csrf(request))
-        _user_manage(c)
-        post_url = '/article/edit/' + article_id + '/'
-        c['form'] = {'action': post_url}
-        article = Article.get_by_id(int(article_id))
-        c['article'] = article
-        return render_to_response('edit_article.html', c)
+    article = Article.get_by_id(int(article_id))
 
-    elif request.method == 'POST':
-        article = Article.get_by_id(int(article_id))
-        article.title = request.POST.get('title', 'untitled')
-        article.body = request.POST.get('new_content', 'no content')
-        article.put()
-        return HttpResponseRedirect('/article/' + article_id + '/')
+    if users.get_current_user() != article.author:
+        return HttpResponseRedirect('/need_login/')
+
+    else:
+        if request.method == 'GET':
+            c = {}
+            c.update(csrf(request))
+            # Give user details to template.
+            _user_manage(c)
+            post_url = '/article/edit/' + article_id + '/'
+            # Set post url.
+            c['form'] = {'action': post_url}
+            # Get the article and populate the form.
+            c['article'] = article
+
+            return render_to_response('edit_article.html', c)
+
+        elif request.method == 'POST':
+            # Modify the article.
+            article.title = request.POST.get('title', 'untitled')
+            article.body = request.POST.get('new_content', 'no content')
+            # Save it.
+            article.put()
+
+            return HttpResponseRedirect('/article/' + article_id + '/')
 
 
 @_require_login
 def article_delete(request, article_id):
+    """We check if the user has rights to delete, and we delete."""
 
     article = Article.get_by_id(int(article_id))
-    article.delete()
-    return HttpResponseRedirect('/article/all/')
+    if users.get_current_user() != article.author:
+        return HttpResponseRedirect('/need_login/')
+    else:
+        article.delete()
+        return HttpResponseRedirect('/article/all/')
