@@ -89,7 +89,7 @@ def article_edit(request, article_id):
 
     article = Article.get_by_id(int(article_id))
 
-    if users.get_current_user() != article.author:
+    if users.get_current_user().email() != article.author:
         return HttpResponseRedirect('/need_login/')
 
     else:
@@ -121,7 +121,7 @@ def article_delete(request, article_id):
     """We check if the user has rights to delete, and we delete."""
 
     article = Article.get_by_id(int(article_id))
-    if users.get_current_user() != article.author:
+    if users.get_current_user().email() != article.author:
         return HttpResponseRedirect('/need_login/')
     else:
         article.delete()
